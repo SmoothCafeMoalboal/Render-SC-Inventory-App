@@ -8,6 +8,24 @@ import type { IStorage } from "./storage";
 
 // Simple in-memory storage for demo purposes when database is unavailable
 export class FallbackStorage implements IStorage {
+  async productHasDependencies(productId: string): Promise<boolean> {
+    // Check if product is referenced in deliveryItems, inventoryMovements, or recipeIngredients
+    const deliveryCount = Array.from(this.deliveryItems.values()).filter(item => item.productId === productId).length;
+    const movementCount = Array.from(this.inventoryMovements.values()).filter(movement => movement.productId === productId).length;
+    const recipeCount = Array.from(this.recipeIngredients.values()).filter(ingredient => ingredient.productId === productId).length;
+    return deliveryCount > 0 || movementCount > 0 || recipeCount > 0;
+  }
+
+  async deleteProduct(productId: string): Promise<boolean> {
+    const existed = this.products.delete(productId);
+    // Also remove inventory entries for this product
+    for (const key of Array.from(this.inventory.keys())) {
+      if (key.startsWith(productId + "-")) {
+        this.inventory.delete(key);
+      }
+    }
+    return existed;
+  }
   private users = new Map<string, User>();
   private products = new Map<string, Product>();
   private inventory = new Map<string, Inventory>();
@@ -248,7 +266,12 @@ export class FallbackStorage implements IStorage {
   }
 
   async createDelivery(insertDelivery: InsertDelivery): Promise<Delivery> {
-    const delivery: Delivery = { ...insertDelivery, id: randomUUID(), createdAt: new Date(), updatedAt: new Date() };
+    const delivery: Delivery = {
+      ...insertDelivery,
+      id: randomUUID(),
+      totalValue: insertDelivery.totalValue ?? null,
+      notes: insertDelivery.notes ?? null,
+    };
     this.deliveries.set(delivery.id, delivery);
     return delivery;
   }
@@ -263,7 +286,11 @@ export class FallbackStorage implements IStorage {
 
   // Delivery Items
   async createDeliveryItem(insertItem: InsertDeliveryItem): Promise<DeliveryItem> {
-    const item: DeliveryItem = { ...insertItem, id: randomUUID(), createdAt: new Date(), updatedAt: new Date() };
+    const item: DeliveryItem = {
+      ...insertItem,
+      id: randomUUID(),
+      unitCost: insertItem.unitCost ?? null,
+    };
     this.deliveryItems.set(item.id, item);
     return item;
   }
@@ -277,7 +304,11 @@ export class FallbackStorage implements IStorage {
     const movement: InventoryMovement = { 
       ...insertMovement, 
       id: randomUUID(),
-      timestamp: new Date()
+      timestamp: new Date(),
+      notes: insertMovement.notes ?? null,
+      deliveryId: insertMovement.deliveryId ?? null,
+      fromDepartment: insertMovement.fromDepartment ?? null,
+      toDepartment: insertMovement.toDepartment ?? null,
     };
     this.inventoryMovements.set(movement.id, movement);
     return movement;
@@ -315,7 +346,12 @@ export class FallbackStorage implements IStorage {
   }
 
   async createRecipe(insertRecipe: InsertRecipe): Promise<Recipe> {
-    const recipe: Recipe = { ...insertRecipe, id: randomUUID(), createdAt: new Date(), updatedAt: new Date() };
+    const recipe: Recipe = {
+      ...insertRecipe,
+      id: randomUUID(),
+      isActive: insertRecipe.isActive ?? true,
+      description: insertRecipe.description ?? null,
+    };
     this.recipes.set(recipe.id, recipe);
     return recipe;
   }
@@ -330,7 +366,10 @@ export class FallbackStorage implements IStorage {
 
   // Recipe Ingredients
   async createRecipeIngredient(insertIngredient: InsertRecipeIngredient): Promise<RecipeIngredient> {
-    const ingredient: RecipeIngredient = { ...insertIngredient, id: randomUUID(), createdAt: new Date(), updatedAt: new Date() };
+    const ingredient: RecipeIngredient = {
+      ...insertIngredient,
+      id: randomUUID(),
+    };
     this.recipeIngredients.set(ingredient.id, ingredient);
     return ingredient;
   }
