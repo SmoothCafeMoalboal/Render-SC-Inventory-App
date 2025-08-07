@@ -4,7 +4,7 @@
     "module": "CommonJS",
     "moduleResolution": "Node",
     "outDir": "dist",
-    "rootDir": "./",
+    "rootDir": "../",
     "strict": true,
     "esModuleInterop": true,
     "resolveJsonModule": true,
@@ -16,6 +16,10 @@
     },
     "types": ["node"]
   },
-  "include": ["./**/*.ts"],
+  "include": [
+    "./**/*.ts",
+    "../shared/schema.ts",
+    "../vite.config.ts"
+  ],
   "exclude": ["node_modules", "dist"]
 }
