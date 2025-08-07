@@ -644,19 +644,3 @@ class StorageManager {
 const storageManager = new StorageManager();
 export const storage = storageManager.getStorage();
 
-export async function productHasDependencies(
-  productId: string,
-): Promise<boolean> {
-  const [deliveryCount, movementCount, recipeCount] = await Promise.all([
-    db.deliveryItems.count({ where: { productId } }),
-    db.inventoryMovements.count({ where: { productId } }),
-    db.recipeIngredients.count({ where: { productId } }),
-  ]);
-
-  return deliveryCount > 0 || movementCount > 0 || recipeCount > 0;
-}
-
-export async function deleteProduct(productId: string): Promise<boolean> {
-  const result = await db.products.delete({ where: { id: productId } });
-  return !!result;
-}
