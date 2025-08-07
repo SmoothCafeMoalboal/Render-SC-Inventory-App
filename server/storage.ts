@@ -97,9 +97,26 @@ export interface IStorage {
     ingredient: InsertRecipeIngredient,
   ): Promise<RecipeIngredient>;
   getRecipeIngredients(recipeId: string): Promise<RecipeIngredient[]>;
+
+  // Product dependency and deletion
+  productHasDependencies(productId: string): Promise<boolean>;
+  deleteProduct(productId: string): Promise<boolean>;
 }
 
 export class DatabaseStorage implements IStorage {
+  async productHasDependencies(productId: string): Promise<boolean> {
+    const [deliveryCount, movementCount, recipeCount] = await Promise.all([
+      db.select().from(deliveryItems).where(eq(deliveryItems.productId, productId)).then(r => r.length),
+      db.select().from(inventoryMovements).where(eq(inventoryMovements.productId, productId)).then(r => r.length),
+      db.select().from(recipeIngredients).where(eq(recipeIngredients.productId, productId)).then(r => r.length),
+    ]);
+    return deliveryCount > 0 || movementCount > 0 || recipeCount > 0;
+  }
+
+  async deleteProduct(productId: string): Promise<boolean> {
+    const result = await db.delete(products).where(eq(products.id, productId)).returning();
+    return result.length > 0;
+  }
   private fallbackMode = false;
   private fallbackData = {
     users: new Map<string, User>(),
