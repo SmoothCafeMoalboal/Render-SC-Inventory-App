@@ -18,8 +18,14 @@
   },
   "include": [
     "./**/*.ts",
-    "../shared/schema.ts",
-    "../vite.config.ts"
+    "../shared/schema.ts"
   ],
-  "exclude": ["node_modules", "dist"]
+  "exclude": [
+    "node_modules",
+    "dist",
+    "../vite.config.ts",
+    "../client",
+    "../client/**",
+    "../vite.ts"
+  ]
 }
