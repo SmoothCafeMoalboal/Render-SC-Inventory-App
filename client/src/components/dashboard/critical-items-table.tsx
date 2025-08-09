@@ -64,6 +64,7 @@ export default function CriticalItemsTable() {
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const filteredItems = Array.isArray(lowStockItems) ? lowStockItems.filter((item: any) => {
     const matchesSearch = !searchTerm || 
       item.product?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -170,6 +171,7 @@ export default function CriticalItemsTable() {
                   </tr>
                 ))
               ) : filteredItems.length > 0 ? (
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 filteredItems.map((item: any) => (
                   <tr key={item.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">

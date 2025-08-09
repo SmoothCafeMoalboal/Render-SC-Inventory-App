@@ -24,7 +24,6 @@ export default function ProductForm({ onSuccess }: ProductFormProps) {
     resolver: zodResolver(insertProductSchema),
     defaultValues: {
       name: "",
-      brand: "",
       sku: "",
       department: "kitchen",
       unitType: "each",
@@ -49,6 +48,7 @@ export default function ProductForm({ onSuccess }: ProductFormProps) {
       form.reset();
       onSuccess?.();
     },
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onError: (error: any) => {
       toast({
         title: "Error",
@@ -80,19 +80,6 @@ export default function ProductForm({ onSuccess }: ProductFormProps) {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="brand"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Brand</FormLabel>
-                <FormControl>
-                  <Input {...field} value={field.value || ""} placeholder="Enter brand name" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
           <FormField
             control={form.control}

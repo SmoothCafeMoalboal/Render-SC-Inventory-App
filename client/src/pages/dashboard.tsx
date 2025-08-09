@@ -61,6 +61,7 @@ export default function Dashboard() {
         )}
 
         {/* Department Overview */}
+        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
         <DepartmentOverview stats={stats as any} loading={statsLoading} />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">

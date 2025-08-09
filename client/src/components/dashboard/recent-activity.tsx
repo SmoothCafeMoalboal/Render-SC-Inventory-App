@@ -58,6 +58,7 @@ export default function RecentActivity() {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatActivityDescription = (movement: any) => {
     switch (movement.movementType) {
       case "delivery":
@@ -82,6 +83,7 @@ export default function RecentActivity() {
       <CardContent className="p-6">
         <div className="space-y-4">
           {Array.isArray(movements) && movements.length > 0 ? (
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             movements.map((movement: any) => {
               const activityIcon = getActivityIcon(movement.movementType);
               
