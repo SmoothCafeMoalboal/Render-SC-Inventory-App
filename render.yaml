@@ -17,4 +17,4 @@ services:
     name: sc-inventory-web
     rootDir: client
     buildCommand: pnpm install --frozen-lockfile && pnpm run build
-   startCommand: serve -s dist
+    startCommand: serve -s dist
