@@ -33,5 +33,6 @@
     "tailwindcss-animate": "1.0.7",
     "typescript": "5.5.4",
     "vite": "5.4.19"
-  }
+  },
+  "packageManager": "pnpm@10.14.0"
 }
