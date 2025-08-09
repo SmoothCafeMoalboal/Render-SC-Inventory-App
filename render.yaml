@@ -13,7 +13,7 @@ services:
       - key: NODE_ENV
         value: production
 
-  - type: static
+  - type: web
     name: sc-inventory-web
     rootDir: client
     buildCommand: pnpm install --frozen-lockfile && pnpm run build
