@@ -1,5 +1,6 @@
 services:
   - type: web
+    runtime: node
     name: sc-inventory-api
     env: node
     rootDir: server
@@ -14,6 +15,7 @@ services:
         value: production
 
   - type: web
+    runtime: node
     name: sc-inventory-web
     rootDir: client
     buildCommand: pnpm install --frozen-lockfile && pnpm run build
